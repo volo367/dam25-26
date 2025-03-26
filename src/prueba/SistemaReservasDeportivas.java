@@ -10,17 +10,16 @@ import java.util.List;
  * @author Volo
  */
 public class SistemaReservasDeportivas {
-
     private List<Reserva> reservas;
-    private boolean[] iluminacion;
+    private GestorIluminacion gestorIluminacion;
     private static final int MAX_PISTAS = 10; // Número máximo de pistas
 
     /**
-     * Constructor de la clase. Inicializa la lista de reservas y el estado de la iluminación.
+     * Constructor de la clase. Inicializa la lista de reservas y el gestor de iluminación.
      */
     public SistemaReservasDeportivas() {
         reservas = new ArrayList<>();
-        iluminacion = new boolean[MAX_PISTAS];
+        gestorIluminacion = new GestorIluminacion(MAX_PISTAS);
     }
 
     /**
@@ -54,34 +53,6 @@ public class SistemaReservasDeportivas {
     }
 
     /**
-     * Enciende la iluminación de una pista específica.
-     * 
-     * @param idPista Identificador de la pista.
-     * @return true si la iluminación se activa correctamente, false si el ID es inválido.
-     */
-    public boolean encenderLuces(int idPista) {
-        if (idPista < 0 || idPista >= MAX_PISTAS) {
-            return false;
-        }
-        iluminacion[idPista] = true;
-        return true;
-    }
-
-    /**
-     * Apaga la iluminación de una pista específica.
-     * 
-     * @param idPista Identificador de la pista.
-     * @return true si la iluminación se desactiva correctamente, false si el ID es inválido.
-     */
-    public boolean apagarLuces(int idPista) {
-        if (idPista < 0 || idPista >= MAX_PISTAS) {
-            return false;
-        }
-        iluminacion[idPista] = false;
-        return true;
-    }
-
-    /**
      * Verifica si una pista está disponible en una fecha determinada.
      * 
      * @param idPista Identificador de la pista.
@@ -96,4 +67,40 @@ public class SistemaReservasDeportivas {
         }
         return true;
     }
+
+    /** Métodos delegados a GestorIluminacion **/
+    public boolean encenderLuces(int idPista) {
+        return gestorIluminacion.encenderLuces(idPista);
+    }
+
+    public boolean apagarLuces(int idPista) {
+        return gestorIluminacion.apagarLuces(idPista);
+    }
+}
+
+	/**
+	* Clase encargada de gestionar la iluminación de las pistas.
+	*/
+	class GestorIluminacion {
+		private boolean[] iluminacion;
+
+		public GestorIluminacion(int numPistas) {
+			iluminacion = new boolean[numPistas];
+		}
+
+		public boolean encenderLuces(int idPista) {
+			if (idPista < 0 || idPista >= iluminacion.length) {
+				return false;
+			}
+			iluminacion[idPista] = true;
+			return true;
+		}
+
+		public boolean apagarLuces(int idPista) {
+			if (idPista < 0 || idPista >= iluminacion.length) {
+				return false;
+			}
+			iluminacion[idPista] = false;
+			return true;
+	}
 }
